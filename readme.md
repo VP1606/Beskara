@@ -22,3 +22,27 @@ A (soon to be) Smart Irrigation System written in Python.
 - Valve shut off *(override)* and pause
 - Delivery amount adjustment (per zone)
 - Reset system fully
+
+## Virtual Environment
+
+**DO NOT PUSH** any venv folders and files.
+
+Use the name **"venv"** for your virtual environment.
+
+Update requirements at the end of your feature, **after** merging into develop.
+
+To install/create the venv:
+```sh
+python3 -m venv ./venv
+```
+
+To install required packages:
+```sh
+pip install -r requirements.txt
+pip install pipreqs
+```
+
+To update requirements:
+```sh
+pipreqs --force
+```
