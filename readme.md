@@ -22,5 +22,3 @@ A (soon to be) Smart Irrigation System written in Python.
 - Valve shut off *(override)* and pause
 - Delivery amount adjustment (per zone)
 - Reset system fully
-
-## Angellou was here
