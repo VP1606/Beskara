@@ -23,6 +23,14 @@ A (soon to be) Smart Irrigation System written in Python.
 - Delivery amount adjustment (per zone)
 - Reset system fully
 
+## To Run
+
+Use the -m flag when running and execute the modules as scripts to allow parallel module support.
+
+```py
+python -m configurator.manager
+```
+
 ## Virtual Environment
 
 **DO NOT PUSH** any venv folders and files.

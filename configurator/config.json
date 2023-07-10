@@ -1,0 +1,12 @@
+{
+    "zones": [
+        {
+            "id": 1,
+            "desc": "SAMPLE ZONE #1",
+            "gpio_valve": 0,
+            "gpio_flm": 0,
+            "pressure_max_psi": 20,
+            "delivery_goal_l": 1000 
+        }
+    ]
+}
