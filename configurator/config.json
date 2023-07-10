@@ -7,6 +7,24 @@
             "gpio_flm": 0,
             "pressure_max_psi": 20,
             "delivery_goal_l": 1000 
+        },
+
+        {
+            "id": 2,
+            "desc": "SAMPLE ZONE #2",
+            "gpio_valve": 7,
+            "gpio_flm": 12,
+            "pressure_max_psi": 20,
+            "delivery_goal_l": 720 
+        },
+
+        {
+            "id": 3,
+            "desc": "SAMPLE ZONE #3",
+            "gpio_valve": 4,
+            "gpio_flm": 4,
+            "pressure_max_psi": 20,
+            "delivery_goal_l": 500 
         }
     ]
 }
