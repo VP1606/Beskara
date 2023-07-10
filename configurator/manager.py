@@ -17,11 +17,14 @@ class ConfigManager:
             raw_json = json.load(config_f)
             config_f.close()
 
-        self.zones = []
-
+        self.zones = {}
         _zones = raw_json['zones']
+        
         for _zone in _zones:
             formed_zone = Zone(_zone)
-            self.zones.append(formed_zone)
+            self.zones[formed_zone.id] = formed_zone
+
+    def get_zone(self, id: int):
+        return self.zones[id]
 
 main_manager = ConfigManager()
