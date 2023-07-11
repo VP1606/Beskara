@@ -9,6 +9,11 @@ class Zone:
         self.max_pressure = float(raw['pressure_max_psi'])
         self.delivery_goal = float(raw['delivery_goal_l'])
 
+class ZonePrg_Dict(dict):
+    def __setitem__(self, __key: int, __value: float) -> None:
+        # print("You are changing the value of {} to {}!!".format(__key, __value))
+        return super(ZonePrg_Dict, self).__setitem__(__key, __value)
+
 
 class ConfigManager:
     def __init__(self) -> None:
@@ -18,11 +23,13 @@ class ConfigManager:
             config_f.close()
 
         self.zones = {}
+        self.zone_prg = ZonePrg_Dict()
+
         _zones = raw_json['zones']
-        
         for _zone in _zones:
             formed_zone = Zone(_zone)
             self.zones[formed_zone.id] = formed_zone
+            self.zone_prg[formed_zone.id] = 0.0
 
     def get_zone(self, id: int):
         return self.zones[id]

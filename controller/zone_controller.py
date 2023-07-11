@@ -16,6 +16,7 @@ def demo_close_valve(port: int):
 def zone_control(id: int):
     zone_det: Zone = manager.get_zone(id=id)
     delivered = 0.0
+    manager.zone_prg[id] = 0.0
 
     demo_open_valve(port=zone_det.gpio_valve)
     time_cache = time.time()
@@ -30,13 +31,14 @@ def zone_control(id: int):
         time_now = time.time()
 
         delivered += (fl_use/60) * (time_now - time_cache)
+        manager.zone_prg[id] = delivered
 
         fl_cache = fl_now
         time_cache = time_now
         count += 1
 
+    demo_close_valve(port=zone_det.gpio_valve)
+
     frequency = float(count) / (time.time() - start_time)
     frequency = round(frequency, 3)
-
-    demo_close_valve(port=zone_det.gpio_valve)
     print("ZONE {0} DONE: {1} / {2} at {3} Hz".format(id, round(delivered, 2), round(zone_det.delivery_goal, 2), frequency))
