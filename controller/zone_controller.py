@@ -3,6 +3,7 @@ from configurator.manager import Zone
 import time
 
 import random
+import websockets, asyncio
 
 def demo_get_flm(port: int):
     return random.uniform(7800.0, 8000.0)
@@ -13,7 +14,7 @@ def demo_open_valve(port: int):
 def demo_close_valve(port: int):
     print("VALVE {0} CLOSED".format(port), end='\n')
 
-def zone_control(id: int):
+async def zone_control(id: int, websocket):
     zone_det: Zone = manager.get_zone(id=id)
     delivered = 0.0
     manager.zone_prg[id] = 0.0
@@ -32,6 +33,7 @@ def zone_control(id: int):
 
         delivered += (fl_use/60) * (time_now - time_cache)
         manager.zone_prg[id] = delivered
+        await websocket.send(str(delivered))
 
         fl_cache = fl_now
         time_cache = time_now
@@ -42,3 +44,12 @@ def zone_control(id: int):
     frequency = float(count) / (time.time() - start_time)
     frequency = round(frequency, 3)
     print("ZONE {0} DONE: {1} / {2} at {3} Hz".format(id, round(delivered, 2), round(zone_det.delivery_goal, 2), frequency))
+
+async def zone_control_loop(id: int):
+    async with websockets.connect('ws://127.0.0.1:8000/wss') as websocket:
+        await zone_control(id, websocket)
+        print("ZC COMP")
+        await websocket.close()
+
+def launch_zone(id: int):
+    asyncio.run(zone_control_loop(id=id))
