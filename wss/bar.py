@@ -11,7 +11,7 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             data = await websocket.receive_json()
             print(data)
-            await manager.main_switch(payload=data)
+            await manager.main_switch(websocket=websocket, payload=data)
 
     except:
         manager.disconnect(websocket=websocket)

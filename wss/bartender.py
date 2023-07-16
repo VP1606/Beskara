@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from fastapi import WebSocket
 import uuid
 import json
+import config_handler
 
 @dataclass
 class BarTender:
@@ -34,7 +35,7 @@ class BarTender:
         for connection in self.active_connections.values():
             await connection.send_json(payload)
 
-    async def main_switch(self, payload: dict):
+    async def main_switch(self, websocket: WebSocket, payload: dict):
         try:
             command = payload["cmd"]
 
@@ -42,6 +43,12 @@ class BarTender:
                 await self.broadcast_package(payload=payload)
             elif command == "beskara_mstat":
                 await self.broadcast_package(payload=payload)
+            elif command == "bclient_req_config":
+                rep = config_handler.load_config()
+                await self.targeted_send_package(websocket=websocket, payload=rep)
+            elif command == "bclient_set_config":
+                data = json.dumps(payload["data"])
+                config_handler.update_config(new_json=data)
 
             else:
                 print("Unrecognised command!")
