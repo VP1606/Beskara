@@ -1,10 +1,14 @@
-from controller.zone_controller import launch_zone
+from controller.zone_controller import launch_zone, send_wss_stat
 from configurator.manager import main_manager as manager
 from configurator.manager import Zone
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import asyncio
+import websockets
+import json
 
-def launch_threaded():
+async def launch_threaded():
+    await send_wss_stat(running=True)
     threads = []
 
     with ThreadPoolExecutor(max_workers=len(manager.zones)) as executor:
@@ -14,5 +18,6 @@ def launch_threaded():
             print("Thread finished.")
 
     print(manager.zone_prg)
+    await send_wss_stat(running=False)
 
-launch_threaded()
+asyncio.run(launch_threaded())

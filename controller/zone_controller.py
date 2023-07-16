@@ -56,3 +56,13 @@ async def zone_control_loop(id: int):
 
 def launch_zone(id: int):
     asyncio.run(zone_control_loop(id=id))
+
+async def send_wss_stat(running=True):
+    message = {
+        "cmd": "beskara_mstat",
+        "running": running
+    }
+    async with websockets.connect("ws://127.0.0.1:8000/wss") as websocket:
+            await websocket.send(json.dumps(message))
+            print("ZC COMP")
+            await websocket.close()

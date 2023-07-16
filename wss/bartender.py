@@ -33,3 +33,15 @@ class BarTender:
     async def broadcast_package(self, payload: json):
         for connection in self.active_connections.values():
             await connection.send_json(payload)
+
+    async def main_switch(self, payload: dict):
+        try:
+            command = payload["cmd"]
+
+            if command == "beskara_mlds":
+                self.broadcast_package(payload=payload)
+            else:
+                print("Unrecognised command!")
+
+        except KeyError:
+            print("Unknown Key!")

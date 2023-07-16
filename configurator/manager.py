@@ -24,6 +24,7 @@ class ConfigManager:
 
         self.zones = {}
         self.zone_prg = ZonePrg_Dict()
+        self.zone_prg["cmd"] = "beskara_mlds"
 
         _zones = raw_json['zones']
         for _zone in _zones:
