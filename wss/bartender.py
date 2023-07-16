@@ -12,9 +12,11 @@ class BarTender:
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         new_uuid = str(uuid.uuid4())
+        self.active_connections[new_uuid] = websocket
 
     def disconnect(self, websocket: WebSocket):
         loc_uuid = self.find_connection_id(websocket)
+        del self.active_connections[loc_uuid]
 
     def find_connection_id(self, websocket: WebSocket):
         locked_list = self.active_connections

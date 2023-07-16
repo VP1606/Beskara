@@ -17,6 +17,7 @@ def demo_close_valve(port: int):
     print("VALVE {0} CLOSED".format(port), end='\n')
 
 async def zone_control(id: int, websocket):
+    await websocket.send(json.dumps(manager.zone_prg))
     zone_det: Zone = manager.get_zone(id=id)
     delivered = 0.0
     manager.zone_prg[id] = 0.0
@@ -36,11 +37,6 @@ async def zone_control(id: int, websocket):
         delivered += (fl_use/60) * (time_now - time_cache)
         manager.zone_prg[id] = delivered
 
-        try:
-            await websocket.send(json.dumps(manager.zone_prg))
-        except AttributeError:
-            pass
-
         fl_cache = fl_now
         time_cache = time_now
         count += 1
@@ -50,15 +46,13 @@ async def zone_control(id: int, websocket):
     frequency = float(count) / (time.time() - start_time)
     frequency = round(frequency, 3)
     print("ZONE {0} DONE: {1} / {2} at {3} Hz".format(id, round(delivered, 2), round(zone_det.delivery_goal, 2), frequency))
+    await websocket.send(json.dumps(manager.zone_prg))
 
 async def zone_control_loop(id: int, verbose: bool):
-    if verbose:
-        async with websockets.connect('ws://127.0.0.1:8000/wss') as websocket:
+    async with websockets.connect('ws://127.0.0.1:8000/wss') as websocket:
             await zone_control(id, websocket)
             print("ZC COMP")
             await websocket.close()
-    else:
-        await zone_control(id, None)
 
 def launch_zone(id: int, verbose_id):
     verbose = False

@@ -8,6 +8,7 @@ manager = BT.BarTender()
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     while True:
-        data = await websocket.receive_text()
+        data = await websocket.receive_json()
         print(data)
         # await websocket.send_text(f"Message text was: {data}")
+        await manager.broadcast_package(payload=data)
