@@ -39,7 +39,10 @@ class BarTender:
             command = payload["cmd"]
 
             if command == "beskara_mlds":
-                self.broadcast_package(payload=payload)
+                await self.broadcast_package(payload=payload)
+            elif command == "beskara_mstat":
+                await self.broadcast_package(payload=payload)
+
             else:
                 print("Unrecognised command!")
 
