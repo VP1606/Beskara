@@ -49,10 +49,10 @@ async def zone_control(id: int, websocket):
     await websocket.send(json.dumps(manager.zone_prg))
 
 async def zone_control_loop(id: int):
-    async with websockets.connect('ws://127.0.0.1:8000/wss') as websocket:
+    async with websockets.connect("ws://127.0.0.1:8000/wss") as websocket:
             await zone_control(id, websocket)
             print("ZC COMP")
             await websocket.close()
 
-def launch_zone(id: int, verbose_id):
+def launch_zone(id: int):
     asyncio.run(zone_control_loop(id=id))
