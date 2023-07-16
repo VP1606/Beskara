@@ -9,6 +9,7 @@ import json
 
 async def launch_threaded():
     await send_wss_stat(running=True)
+    await asyncio.sleep(3)
     threads = []
 
     with ThreadPoolExecutor(max_workers=len(manager.zones)) as executor:

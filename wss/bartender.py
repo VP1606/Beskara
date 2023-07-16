@@ -9,6 +9,7 @@ class BarTender:
     def __init__(self) -> None:
         self.active_connections: dict = {}
         self.uuid_to_userid: dict = {}
+        self.running_delivery = False
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -42,13 +43,24 @@ class BarTender:
             if command == "beskara_mlds":
                 await self.broadcast_package(payload=payload)
             elif command == "beskara_mstat":
+                self.running_delivery = bool(payload["running"])
                 await self.broadcast_package(payload=payload)
-            elif command == "bclient_req_config":
-                rep = config_handler.load_config()
-                await self.targeted_send_package(websocket=websocket, payload=rep)
+
+            elif command == "bclient_get_config":
+                if self.running_delivery:
+                    print("Unavailable; running delivery.")
+                else:
+                    rep = config_handler.load_config()
+                    await self.targeted_send_package(websocket=websocket, payload=rep)
+
             elif command == "bclient_set_config":
-                data = json.dumps(payload["data"])
-                config_handler.update_config(new_json=data)
+                if self.running_delivery:
+                    print("Unavailable; running delivery.")
+                else:
+                    data = json.dumps(payload["data"])
+                    config_handler.update_config(new_json=data)
+                    rep = config_handler.load_config()
+                    await self.targeted_send_package(websocket=websocket, payload=rep)
 
             else:
                 print("Unrecognised command!")
