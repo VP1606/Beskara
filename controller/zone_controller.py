@@ -48,14 +48,11 @@ async def zone_control(id: int, websocket):
     print("ZONE {0} DONE: {1} / {2} at {3} Hz".format(id, round(delivered, 2), round(zone_det.delivery_goal, 2), frequency))
     await websocket.send(json.dumps(manager.zone_prg))
 
-async def zone_control_loop(id: int, verbose: bool):
+async def zone_control_loop(id: int):
     async with websockets.connect('ws://127.0.0.1:8000/wss') as websocket:
             await zone_control(id, websocket)
             print("ZC COMP")
             await websocket.close()
 
 def launch_zone(id: int, verbose_id):
-    verbose = False
-    if id == verbose_id:
-        verbose = True
-    asyncio.run(zone_control_loop(id=id, verbose=verbose))
+    asyncio.run(zone_control_loop(id=id))

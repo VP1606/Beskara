@@ -6,10 +6,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def launch_threaded():
     threads = []
-    verbose_id = manager.get_longest_zone()
+
     with ThreadPoolExecutor(max_workers=len(manager.zones)) as executor:
         for id in manager.zones:
-            threads.append(executor.submit(launch_zone, id, verbose_id))
+            threads.append(executor.submit(launch_zone, id))
         for _ in as_completed(threads):
             print("Thread finished.")
 
