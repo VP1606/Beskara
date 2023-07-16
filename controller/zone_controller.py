@@ -35,7 +35,11 @@ async def zone_control(id: int, websocket):
 
         delivered += (fl_use/60) * (time_now - time_cache)
         manager.zone_prg[id] = delivered
-        await websocket.send(json.dumps(manager.zone_prg))
+
+        try:
+            await websocket.send(json.dumps(manager.zone_prg))
+        except AttributeError:
+            pass
 
         fl_cache = fl_now
         time_cache = time_now
@@ -47,11 +51,17 @@ async def zone_control(id: int, websocket):
     frequency = round(frequency, 3)
     print("ZONE {0} DONE: {1} / {2} at {3} Hz".format(id, round(delivered, 2), round(zone_det.delivery_goal, 2), frequency))
 
-async def zone_control_loop(id: int):
-    async with websockets.connect('ws://127.0.0.1:8000/wss') as websocket:
-        await zone_control(id, websocket)
-        print("ZC COMP")
-        await websocket.close()
+async def zone_control_loop(id: int, verbose: bool):
+    if verbose:
+        async with websockets.connect('ws://127.0.0.1:8000/wss') as websocket:
+            await zone_control(id, websocket)
+            print("ZC COMP")
+            await websocket.close()
+    else:
+        await zone_control(id, None)
 
-def launch_zone(id: int):
-    asyncio.run(zone_control_loop(id=id))
+def launch_zone(id: int, verbose_id):
+    verbose = False
+    if id == verbose_id:
+        verbose = True
+    asyncio.run(zone_control_loop(id=id, verbose=verbose))
