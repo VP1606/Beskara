@@ -24,6 +24,7 @@ class ConfigManager:
 
         self.zones = {}
         self.zone_prg = ZonePrg_Dict()
+        self.zone_prg["cmd"] = "beskara_mlds"
 
         _zones = raw_json['zones']
         for _zone in _zones:
@@ -33,5 +34,9 @@ class ConfigManager:
 
     def get_zone(self, id: int):
         return self.zones[id]
+    
+    def get_longest_zone(self) -> int:
+        max_key = max(self.zones, key=lambda k: self.zones[k].delivery_goal)
+        return max_key
 
 main_manager = ConfigManager()
