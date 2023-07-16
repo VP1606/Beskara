@@ -3,7 +3,6 @@ from configurator.manager import main_manager as manager
 from configurator.manager import Zone
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import asyncio
 
 def launch_threaded():
     threads = []

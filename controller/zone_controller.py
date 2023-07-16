@@ -3,7 +3,9 @@ from configurator.manager import Zone
 import time
 
 import random
-import websockets, asyncio
+import websockets
+import asyncio
+import json
 
 def demo_get_flm(port: int):
     return random.uniform(7800.0, 8000.0)
@@ -33,7 +35,7 @@ async def zone_control(id: int, websocket):
 
         delivered += (fl_use/60) * (time_now - time_cache)
         manager.zone_prg[id] = delivered
-        await websocket.send(str(delivered))
+        await websocket.send(json.dumps(manager.zone_prg))
 
         fl_cache = fl_now
         time_cache = time_now
