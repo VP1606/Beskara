@@ -10,7 +10,11 @@ def load_config():
         raw_json = json.load(config_f)
         config_f.close()
 
-    return raw_json
+    main_returner = {
+        "cmd": "beskara_config_get",
+        "data": raw_json
+    }
+    return main_returner
 
 def update_config(new_json):
     parent_directory = os.path.abspath(os.path.join(os.getcwd(), ".."))
