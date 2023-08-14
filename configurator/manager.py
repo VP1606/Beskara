@@ -22,6 +22,8 @@ class ConfigManager:
             raw_json = json.load(config_f)
             config_f.close()
 
+        self.wss_address = str(raw_json["wss_address"])
+
         self.zones = {}
         self.zone_prg = ZonePrg_Dict()
         self.zone_prg["cmd"] = "beskara_mlds"

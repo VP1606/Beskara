@@ -49,7 +49,7 @@ async def zone_control(id: int, websocket):
     await websocket.send(json.dumps(manager.zone_prg))
 
 async def zone_control_loop(id: int):
-    async with websockets.connect("ws://127.0.0.1:8000/wss") as websocket:
+    async with websockets.connect("ws://{0}".format(manager.wss_address)) as websocket:
             await zone_control(id, websocket)
             print("ZC COMP")
             await websocket.close()
@@ -62,7 +62,7 @@ async def send_wss_stat(running=True):
         "cmd": "beskara_mstat",
         "running": running
     }
-    async with websockets.connect("ws://127.0.0.1:8000/wss") as websocket:
+    async with websockets.connect("ws://{0}".format(manager.wss_address)) as websocket:
             await websocket.send(json.dumps(message))
             print("ZC COMP")
             await websocket.close()
