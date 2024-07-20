@@ -21,6 +21,8 @@ def read_flm(gpio_port):
     print(f"Reading flow meter on GPIO port {gpio_port}")
     return flow_value
 
+setup()
+
 # Hello this is angellou, I am gonna do DEZ commands on the UBUNTU server  
 #sudo apt update
 #sudo pip install gpiozero

@@ -7,6 +7,8 @@ import websockets
 import asyncio
 import json
 
+import metal.operations as metal
+
 def demo_get_flm(port: int):
     return random.uniform(7800.0, 8000.0)
 
@@ -21,8 +23,16 @@ async def zone_control(id: int, websocket):
     zone_det: Zone = manager.get_zone(id=id)
     delivered = 0.0
     manager.zone_prg[id] = 0.0
+    
+    using_demo = False
+    if 'SAMPLE' in zone_det.description:
+        using_demo = True
 
-    demo_open_valve(port=zone_det.gpio_valve)
+    if using_demo:
+        demo_open_valve(port=zone_det.gpio_valve)
+    else:
+        metal.open_valve(zone_det.gpio_valve)
+    
     time_cache = time.time()
     fl_cache = demo_get_flm(port=zone_det.gpio_flm)
 
@@ -41,7 +51,10 @@ async def zone_control(id: int, websocket):
         time_cache = time_now
         count += 1
 
-    demo_close_valve(port=zone_det.gpio_valve)
+    if using_demo:
+        demo_close_valve(port=zone_det.gpio_valve)
+    else:
+        metal.close_valve(zone_det.gpio_valve)
 
     frequency = float(count) / (time.time() - start_time)
     frequency = round(frequency, 3)
